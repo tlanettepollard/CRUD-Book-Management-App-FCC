@@ -21,6 +21,7 @@ const BookForm = (props) => {
         const values = [bookname, author, price, quantity];
         let errorMsg = '';
 
+        // Checking to see if user has entered all details
         const allFieldsFilled = values.every((field) => {
             const value = `${field}`.trim();
             return value !== '' && value !== '0';
@@ -44,8 +45,11 @@ const BookForm = (props) => {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
+
+        // Change value of state based on which input field is changed
         switch (name) {
             case 'quantity':
+                // Check to see if entered value is integer without decimal point
                 if (value === '' || parseInt(value) === +value) {
                     setBook((prevState) => ({
                         ...prevState,
@@ -53,15 +57,76 @@ const BookForm = (props) => {
                     }));
                 }
                 break;
-            case 'price';
+            case 'price':
+                // Checking for decimal number with only two digits after decimal point, used regexp 
                 if (value === '' || value.match(/^\d{1,}(\.\d{0,2})?$/)) {
-                    setBook((prevState) => )
+                    setBook((prevState) => ({
+                        ...prevState,
+                        [name]: value
+                    }));
                 }
+                break;
+            default:
+                setBook((prevState) => ({
+                    ...prevState,
+                    [name]: value
+                }));
         }
     };
 
     return (
-
+        <div className='main-form'>
+            {errorMsg && <p className='errorMsg'>{errorMsg}</p>}
+            <Form onSubmit={handleOnSubmit}>
+                <Form.Group controlId="name">
+                    <Form.Label>Book Name</Form.Label>
+                    <Form.Control
+                        className='input-control'
+                        type='text'
+                        name='bookname'
+                        value={bookname}
+                        placeholder='Enter name of book'
+                        onchange={handleInputChange}
+                    />
+                </Form.Group>
+                <Form.Group controlId='author'>
+                    <Form.Label>Book Author</Form.Label>
+                    <Form.Control
+                        className='input-control'
+                        type='text'
+                        name='author'
+                        value={author}
+                        placeholder='Enter name of author'
+                        onchange={handleInputChange}
+                    />
+                </Form.Group>
+                <Form.Group controlId='quantity'>
+                    <Form.Label>Quantity</Form.Label>
+                    <Form.Control
+                        className='input-control'
+                        type='number'
+                        name='quantity'
+                        value={quantity}
+                        placeholder='Enter available quantity'
+                        onchange={handleInputChange}
+                    />
+                </Form.Group>
+                <Form.Group controlId='price'>
+                    <Form.Label>Book Price</Form.Label>
+                    <Form.Control
+                        className='input-control'
+                        type='text'
+                        name='price'
+                        value={price}
+                        placeholder='Enter price of book'
+                        onchange={handleInputChange}
+                    />
+                </Form.Group>
+                <Button variant='primary' type='submit' className='submit-btn'>
+                    Submit
+                </Button>
+            </Form>
+        </div>
     );
 };
 
